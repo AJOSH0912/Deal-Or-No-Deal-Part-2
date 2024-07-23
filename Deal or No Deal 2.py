@@ -1,5 +1,4 @@
 import random
-import pygame
 
 class Briefcase:
     def __init__(self, number, value):
@@ -25,17 +24,29 @@ class Game:
         return values[:self.num_briefcases]
 
     def calculate_banker_offer(self):
-        # Implement banker offer calculation based on remaining values and banker personality
+        # Placeholder for more complex banker offer calculation
         remaining_values = [b.value for b in self.briefcases if not b.is_open]
-        # ... banker offer logic based on personality and remaining values
+        average_value = sum(remaining_values) / len(remaining_values)
+        offer = average_value * 0.8  # Adjust multiplier based on banker personality
         return offer
 
     def play(self):
-        pygame.init()  # Initialize pygame
+        # Assign briefcases to players
+        for i, player in enumerate(self.players):
+            player.briefcase = self.briefcases[i]
 
-        # Game loop with updated logic, sound effects, and graphics
+        game_over = False
+        while not game_over:
+            # Current player's turn
+            current_player = self.players[self.current_player]
 
-        pygame.quit()
+            # Game logic here (open briefcase, banker offer, player decision, etc.)
+
+            # Check for game over conditions (e.g., all briefcases opened except player's)
+            game_over = len(self.open_briefcases) == self.num_briefcases - 1
+
+            # Switch to next player
+            self.current_player = (self.current_player + 1) % self.num_players
 
 class Player:
     def __init__(self, name):
@@ -44,18 +55,5 @@ class Player:
 
 # Game setup and initialization
 num_players = int(input("Enter number of players: "))
-game_mode = input("Choose game mode (classic, rapid, challenge): ")
-difficulty = input("Choose difficulty (easy, medium, hard): ")
-
-game = Game(num_players, game_mode=game_mode, difficulty=difficulty)
-
-# Assign briefcases to players
-for i, player in enumerate(game.players):
-    player.briefcase = game.briefcases[i]
-
-# Game loop
-while not game_over:
-    # Current player's turn
-    current_player = game.players[game.current_player]
-    # ... game logic, user input, banker offers, etc.
-    game.current_player = (game.current_player + 1) % game.num_players
+game = Game(num_players)
+game.play()
