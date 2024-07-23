@@ -46,3 +46,16 @@ class Player:
 num_players = int(input("Enter number of players: "))
 game_mode = input("Choose game mode (classic, rapid, challenge): ")
 difficulty = input("Choose difficulty (easy, medium, hard): ")
+
+game = Game(num_players, game_mode=game_mode, difficulty=difficulty)
+
+# Assign briefcases to players
+for i, player in enumerate(game.players):
+    player.briefcase = game.briefcases[i]
+
+# Game loop
+while not game_over:
+    # Current player's turn
+    current_player = game.players[game.current_player]
+    # ... game logic, user input, banker offers, etc.
+    game.current_player = (game.current_player + 1) % game.num_players
