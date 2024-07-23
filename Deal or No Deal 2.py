@@ -37,15 +37,39 @@ class Game:
 
         game_over = False
         while not game_over:
-            # Current player's turn
             current_player = self.players[self.current_player]
+            print(f"It's {current_player.name}'s turn.")
 
-            # Game logic here (open briefcase, banker offer, player decision, etc.)
+            # Player chooses a briefcase to open
+            while True:
+                try:
+                    choice = int(input("Choose a briefcase to open: "))
+                    if choice in self.open_briefcases or choice > self.num_briefcases or choice < 1:
+                        print("Invalid choice. Try again.")
+                    else:
+                        break
+                except ValueError:
+                    print("Invalid input. Please enter a number.")
 
-            # Check for game over conditions (e.g., all briefcases opened except player's)
-            game_over = len(self.open_briefcases) == self.num_briefcases - 1
+            chosen_briefcase = self.briefcases[choice - 1]
+            chosen_briefcase.is_open = True
+            self.open_briefcases.append(choice)
+            print(f"Briefcase {choice} contains: ${chosen_briefcase.value}")
 
-            # Switch to next player
+            # Banker offer after every 5 opened briefcases
+            if len(self.open_briefcases) % 5 == 0:
+                offer = self.calculate_banker_offer()
+                print(f"Banker's offer: ${offer}")
+                deal = input("Deal or No Deal (d/n)? ")
+                if deal.lower() == "d":
+                    print(f"{current_player.name} accepted the offer and won ${offer}")
+                    return
+
+            # Check for game over (only one briefcase left)
+            if len(self.briefcases) - len(self.open_briefcases) == 1:
+                print(f"{current_player.name} wins: ${current_player.briefcase.value}")
+                game_over = True
+
             self.current_player = (self.current_player + 1) % self.num_players
 
 class Player:
